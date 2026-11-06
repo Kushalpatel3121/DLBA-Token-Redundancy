@@ -1,0 +1,80 @@
+# Central settings for the whole project. Every script should read from here
+# instead of hard-coding values, so nothing drifts between runs or teammates.
+
+project:
+  name: dlba-token-redundancy
+  task: mrpc                      # GLUE MRPC, paraphrase detection
+  model_name: bert-base-uncased
+  attn_implementation: eager      # REQUIRED: eager returns attention weights
+  precision: fp32                 # fp32 everywhere (epsilon = 0.01 is sensitive to noise)
+  seeds: [42, 123, 2026]
+  max_length: 128
+
+data:
+  validation_fraction: 0.10       # held out from the MRPC train split
+  split_seed: 42
+  split_file: data/splits/mrpc_val_indices.json   # saved once, shared by everyone
+  # Validation split: early stopping + ALL calibration (signal directions, epsilon checks).
+  # Official dev set (408 pairs): final reported numbers only. Never tune on it.
+
+finetune_m0:
+  learning_rate: 2.0e-5
+  batch_size: 32
+  epochs: 3
+  warmup_ratio: 0.10
+  weight_decay: 0.01
+  select_best_epoch_on: validation   # keep the best epoch by validation score
+
+recovery_finetune:                 # M0+, M25, M50 all use this IDENTICAL recipe
+  extra_epochs: 2
+  learning_rate: 1.0e-5
+  scheduler: linear_decay
+  keep: final_epoch                # no checkpoint selection, so no model gets an advantage
+
+models:
+  M0:     {heads_removed_fraction: 0.00, extra_training: false}
+  M0plus: {heads_removed_fraction: 0.00, extra_training: true}   # control
+  M25:    {heads_removed_fraction: 0.25, extra_training: true}   # 36 of 144 heads
+  M50:    {heads_removed_fraction: 0.50, extra_training: true}   # 72 of 144 heads
+
+pruning:
+  method: michel_head_importance   # Michel et al. 2019, gradient-based
+  importance_split: train
+  global_ranking: true
+  min_heads_per_layer: 1
+  reference_model_for_comparisons: M0plus   # pruned-vs-unpruned always uses M0+
+
+redundancy:
+  epsilon_main: 0.01
+  epsilon_sensitivity: [0.005, 0.02]
+  drop_layers: [4, 6, 8]
+  never_drop_tokens: ["[CLS]", "[SEP]"]
+  calibrate_on: validation
+  report_on: dev
+  dev_subset_fallback: 200         # only if leave-one-out is too slow; same subset for all models
+
+signals:
+  - attention_received
+  - hidden_state_change
+  - hidden_state_norm
+  - stopword_punct_baseline        # trivial baseline (sklearn ENGLISH_STOP_WORDS + punctuation)
+  - random_baseline
+
+latency:
+  batch_size: 32
+  sequence_length: 128
+  precision: fp32
+  warmup_runs: 20
+  timed_runs: 100
+  note: measure all four models in ONE session on an otherwise idle GPU
+
+stats:
+  bootstrap_resamples: 1000
+  ci_level: 0.95
+
+paths:
+  checkpoints: checkpoints
+  hidden_state_cache: cache/hidden_states
+  results: results
+  logs: logs
+  figures: figures

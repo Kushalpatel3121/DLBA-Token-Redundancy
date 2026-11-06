@@ -1,0 +1,21 @@
+# Loose requirements (used only until a frozen requirements.txt exists).
+# After the first successful verification, run:  bash scripts/bootstrap_vm.sh --freeze
+# That writes requirements.txt with exact versions, which every later VM installs.
+#
+# Why the bounds:
+#  - transformers <5: the project relies on BertModel.prune_heads(), the eager attention
+#    backend (needed to read attention weights), and a manual layer-by-layer forward loop.
+#    These are stable in 4.x. Do not move to 5.x mid-project.
+#  - torch: the plain PyPI wheel bundles its own CUDA runtime; it only needs a recent NVIDIA driver.
+
+torch>=2.3
+transformers>=4.44,<5
+datasets>=2.20
+accelerate>=0.33        # required by transformers' Trainer; harmless otherwise
+scikit-learn>=1.4       # AUROC, F1, and the built-in English stopword list
+scipy>=1.11             # Spearman correlation
+numpy>=1.26
+pandas>=2.1
+matplotlib>=3.8
+tqdm>=4.66
+pyyaml>=6.0             # configs/config.yaml

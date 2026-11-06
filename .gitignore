@@ -1,0 +1,27 @@
+# VM connection details (host/user change with every reservation)
+.vmenv
+
+# Python / editors
+.venv/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+.vscode/
+.DS_Store
+
+# Big or regenerable artifacts: move these with rsync (vmctl.sh push/pull), not git
+checkpoints/
+cache/
+*.pt
+*.pth
+*.bin
+*.safetensors
+*.npy
+*.npz
+results/**/*.npy
+results/**/*.npz
+
+# Logs are kept out of git except the environment report
+logs/*
+!logs/env_report.txt
+!logs/env_check.json

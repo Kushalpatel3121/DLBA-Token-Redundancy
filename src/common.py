@@ -10,7 +10,7 @@ import yaml
 from sklearn.metrics import accuracy_score, f1_score
 from sklearn.model_selection import train_test_split
 from torch.utils.data import DataLoader
-from transformers import AutoTokenizer, DataCollatorWithPadding
+from transformers import AutoModelForSequenceClassification, AutoTokenizer, DataCollatorWithPadding
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -57,6 +57,12 @@ def get_logger(name, logfile=None):
         h.setFormatter(fmt)
         logger.addHandler(h)
     return logger
+
+
+def load_checkpoint(path, device, attn_implementation="eager"):
+    """Load a saved model (also works for head-pruned checkpoints) in eval mode on the device."""
+    model = AutoModelForSequenceClassification.from_pretrained(path, attn_implementation=attn_implementation)
+    return model.to(device).eval()
 
 
 # ---------------------------------------------------------------- data

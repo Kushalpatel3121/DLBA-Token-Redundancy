@@ -11,13 +11,13 @@
       "check": "package imports",
       "status": "OK",
       "detail": "torch=2.15.0+cu132 transformers=4.57.6 datasets=5.0.1 sklearn=1.9.1 scipy=1.18.1 numpy=2.5.4 pandas=3.1.1 matplotlib=3.11.2 tqdm=4.70.1 yaml=6.0.3 accelerate=1.15.0",
-      "seconds": 3.78
+      "seconds": 3.46
     },
     {
       "check": "GPU + fp32 compute",
       "status": "OK",
-      "detail": "NVIDIA L40S, 44 GB, capability 8.9, torch CUDA 13.2, fp32 4096x4096 matmul 54.2 ms",
-      "seconds": 1.05
+      "detail": "NVIDIA L40S, 44 GB, capability 8.9, torch CUDA 13.2, fp32 4096x4096 matmul 54.8 ms",
+      "seconds": 0.29
     },
     {
       "check": "fp32 precision flags",
@@ -29,7 +29,7 @@
       "check": "model load + attention weights",
       "status": "OK",
       "detail": "loaded bert-base-uncased; 12 attention maps of shape (1,12,19,19); 13 hidden states",
-      "seconds": 4.15
+      "seconds": 1.66
     },
     {
       "check": "manual layer-by-layer forward",
@@ -47,7 +47,7 @@
       "check": "MRPC dataset",
       "status": "OK",
       "detail": "MRPC loaded: {'train': 3668, 'validation': 408, 'test': 1725} (train will be split into train + 10% validation; 'validation' here is the official dev set)",
-      "seconds": 1.56
+      "seconds": 0.87
     },
     {
       "check": "stopword list",

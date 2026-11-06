@@ -1,0 +1,77 @@
+{
+  "python": "3.12.3",
+  "results": [
+    {
+      "check": "python version",
+      "status": "OK",
+      "detail": "3.12.3 on Linux-6.8.0-147-generic-x86_64-with-glibc2.39",
+      "seconds": 0.0
+    },
+    {
+      "check": "package imports",
+      "status": "OK",
+      "detail": "torch=2.15.0+cu132 transformers=4.57.6 datasets=5.0.1 sklearn=1.9.1 scipy=1.18.1 numpy=2.5.4 pandas=3.1.1 matplotlib=3.11.2 tqdm=4.70.1 yaml=6.0.3 accelerate=1.15.0",
+      "seconds": 3.78
+    },
+    {
+      "check": "GPU + fp32 compute",
+      "status": "OK",
+      "detail": "NVIDIA L40S, 44 GB, capability 8.9, torch CUDA 13.2, fp32 4096x4096 matmul 54.2 ms",
+      "seconds": 1.05
+    },
+    {
+      "check": "fp32 precision flags",
+      "status": "WARN",
+      "detail": "matmul.allow_tf32=False, cudnn.allow_tf32=True -> project code should set both to False so fp32 really means fp32",
+      "seconds": 0.0
+    },
+    {
+      "check": "model load + attention weights",
+      "status": "OK",
+      "detail": "loaded bert-base-uncased; 12 attention maps of shape (1,12,19,19); 13 hidden states",
+      "seconds": 4.15
+    },
+    {
+      "check": "manual layer-by-layer forward",
+      "status": "OK",
+      "detail": "manual layer-by-layer forward matches the normal forward (max diff 0.0e+00)",
+      "seconds": 0.02
+    },
+    {
+      "check": "attention-head pruning",
+      "status": "OK",
+      "detail": "prune_heads works: params 109,483,778 -> 108,893,378; heads per layer [10, 12, 12, 12, 12, 11, 12, 12, 12, 12, 12, 12]",
+      "seconds": 0.08
+    },
+    {
+      "check": "MRPC dataset",
+      "status": "OK",
+      "detail": "MRPC loaded: {'train': 3668, 'validation': 408, 'test': 1725} (train will be split into train + 10% validation; 'validation' here is the official dev set)",
+      "seconds": 1.56
+    },
+    {
+      "check": "stopword list",
+      "status": "OK",
+      "detail": "scikit-learn stopword list available (318 words)",
+      "seconds": 0.0
+    },
+    {
+      "check": "project folders",
+      "status": "OK",
+      "detail": "all project folders exist and results/ is writable",
+      "seconds": 0.0
+    },
+    {
+      "check": "config file",
+      "status": "OK",
+      "detail": "configs/config.yaml parses and has the agreed settings",
+      "seconds": 0.0
+    },
+    {
+      "check": "disk space",
+      "status": "OK",
+      "detail": "66 GB free",
+      "seconds": 0.0
+    }
+  ]
+}
